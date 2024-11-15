@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Master - Color Match Challenge</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+        
+        .game-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .game-header {
+            margin-bottom: 2rem;
+        }
+
+        .game-header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .game-header p {
+            color: #a0a0a0;
+            font-size: 1.1em;
+            margin: 0.5rem 0;
+        }
+        
+        .circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            border: 4px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .circle:hover {
+            transform: scale(1.02);
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 600;
+            color: #4facfe;
+        }
+        
+        .game-over {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 3em;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            padding: 12px 30px;
+            color: white;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        button.restart {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+        }
+        
+        .pulse {
+            animation: pulse 0.5s;
+        }
+        
+        .instructions {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .instructions h2 {
+            color: #4facfe;
+            margin-top: 0;
+        }
+
+        .instructions ul {
+            text-align: left;
+            padding-left: 1.5rem;
+            margin: 0;
+        }
+
+        .instructions li {
+            margin: 0.8rem 0;
+            color: #e0e0e0;
+        }
+
+        .benefits {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            flex: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        .benefit-item h3 {
+            color: #4facfe;
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1em;
+        }
+
+        .benefit-item p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #a0a0a0;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 1rem;
+            }
+            .benefits {
+                flex-direction: column;
+            }
+            .game-header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-header">
+            <h1>Focus Master</h1>
+            <p>Train your brain with color matching challenges</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">Current Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Best Score</div>
+                <div class="stat-value" id="highScore">0</div>
+            </div>
+        </div>
+
+        <div id="targetCircle" class="circle"></div>
+        <div id="playerCircle" class="circle"></div>
+        <button id="gameButton" onclick="startGame()">Start Training</button>
+
+        <div class="instructions">
+            <h2>How to Enhance Your Focus</h2>
+            <ul>
+                <li>Watch the top circle's color pattern</li>
+                <li>Click the bottom circle to match colors</li>
+                <li>Stay focused as the speed increases</li>
+                <li>Beat your high score to improve concentration</li>
+            </ul>
+        </div>
+
+        <div class="benefits">
+            <div class="benefit-item">
+                <h3>Improve Focus</h3>
+                <p>Enhance your concentration through rapid color matching</p>
+            </div>
+            <div class="benefit-item">
+                <h3>Quick Thinking</h3>
+                <p>Develop faster reaction times and decision making</p>
+            </div>
+            <div class="benefit-item">
+                <h3>Brain Training</h3>
+                <p>Exercise your mind with increasing challenges</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="gameOver" class="game-over">
+        <h2>Training Complete!</h2>
+        <p>Focus Score: <span id="finalScore">0</span></p>
+        <p>Keep practicing to enhance your concentration!</p>
+        <button onclick="startGame()">Train Again</button>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
